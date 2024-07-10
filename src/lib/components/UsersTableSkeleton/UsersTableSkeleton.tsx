@@ -15,7 +15,7 @@ export type User = {
 
 const UsersTableSkeleton = () => {
     const userObject = {
-        avatar: 'loading..',
+        avatar: '',
         first_name: 'loading..',
         last_name: 'loading..',
         email: 'loading..'
@@ -53,15 +53,7 @@ const UsersTableSkeleton = () => {
                                 return (
                                     <tr key={index}>
                                         <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                            <Image
-                                                loader={({ src, width }) => `${src}?w=${width}`}
-                                                priority
-                                                key={user.avatar}
-                                                src={user.avatar}
-                                                width={128}
-                                                height={128}
-                                                alt={`user-${user.first_name}-${user.last_name}`}
-                                            />
+                                            <div className="w-[128px] h-[128px] bg-gray-200"></div>
                                         </td>
                                         <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
                                             {user.first_name}

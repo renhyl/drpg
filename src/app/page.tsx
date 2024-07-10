@@ -19,7 +19,13 @@ export default async function Home({
 
     const { page } = searchParams
 
-    queryClient.prefetchQuery(usersOptions(page))
+    let pageNumber = '1'
+
+    if (page) {
+        pageNumber = page
+    }
+
+    queryClient.prefetchQuery(usersOptions(pageNumber))
 
     return (
         <div className="container">
@@ -27,7 +33,7 @@ export default async function Home({
             <ErrorBoundary>
                 <Suspense fallback={<UsersTableSkeleton />}>
                     <HydrationBoundary state={dehydrate(queryClient)}>
-                        <UsersTable />
+                        <UsersTable currentPage={pageNumber} />
                     </HydrationBoundary>
                 </Suspense>
             </ErrorBoundary>

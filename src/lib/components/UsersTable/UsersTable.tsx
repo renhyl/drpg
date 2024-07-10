@@ -1,11 +1,13 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { usersOptions } from '@/lib/queries/users/usersOptions'
 import Image from 'next/image'
 
 import UserEditDialog from '@/lib/components/UserEditDialog/UserEditDialog'
+import Paginator from '@/lib/components/Paginator/Paginator'
+import { Input } from '@/components/ui/input'
 
 export type User = {
     id?: number
@@ -15,22 +17,53 @@ export type User = {
     avatar: string
 }
 
-const UsersTable = () => {
-    const { data, error, isFetching } = useSuspenseQuery(usersOptions())
+interface IUsersTable {
+    currentPage: string
+}
+
+const UsersTable: React.FC<IUsersTable> = ({ currentPage: page = 1 }) => {
+    const { data, error, isFetching } = useSuspenseQuery(usersOptions(page.toString()))
 
     if (!isFetching && error) throw error
 
-    const { data: usersData } = data
+    const { data: usersData, total: totalCount, per_page: perPage } = data
+    const [searchTerm, setSearchTerm] = useState('')
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value)
+    }
+
+    let tableData = usersData
+
+    if (searchTerm !== '') {
+        tableData = usersData.filter((user: User) => {
+            return user.email.includes(searchTerm) || user.last_name.includes(searchTerm)
+        })
+    }
 
     const handleEditDetails = (user: User) => {
         /** TODO save/submit new user data */
         console.log('save new user data:', user)
     }
 
+    const handleCurrentPage = (page: number) => {
+        window.location.href = `/?page=${page}`
+    }
+
     return (
         <div className="container">
             <div className="flex flex-col gap-4">
                 <h1>Dashboard</h1>
+
+                <hr />
+                <Input
+                    type="text"
+                    defaultValue={searchTerm || ''}
+                    className="col-span-3"
+                    onChange={handleChange}
+                    placeholder="type in to search by last name or email"
+                />
+                <hr />
 
                 <table className="border-separate border-spacing-2 w-full border border-slate-400 dark:border-slate-500 bg-white dark:bg-slate-800 text-sm shadow-sm">
                     <thead className="bg-slate-50 dark:bg-slate-700">
@@ -53,7 +86,7 @@ const UsersTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {usersData.map((user: User, index: number) => {
+                        {tableData.map((user: User, index: number) => {
                             return (
                                 <tr key={index}>
                                     <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
@@ -88,6 +121,13 @@ const UsersTable = () => {
                         })}
                     </tbody>
                 </table>
+
+                <Paginator
+                    perPage={perPage}
+                    currentPage={parseInt(page)}
+                    totalCount={totalCount}
+                    setCurrentPage={handleCurrentPage}
+                />
             </div>
         </div>
     )

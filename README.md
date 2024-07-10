@@ -7,6 +7,7 @@ This is simple demo app demonstrating use of NextJS v14, TypeScript and Tailwind
 ### Tech stack
 
 [https://nextjs.org/docs](NextJS) was chosen as it is is one of the leading ReactJS frameworks which allows for Server Side rendering and Client Side Rendering, it is widly supported and has big community.
+[https://tanstack.com/](TanStackQuery) Headless, type-safe, & powerful utilities for State Management, Routing, Data Visualization, Charts, Tables, and more.
 [https://tailwindcss.com/docs/installation](TailWindCSS) was chosen as it is one of the best utility first CSS libraries, it allows for rapid development.
 [https://ui.shadcn.com/](shadcn/ui) is React/TailWindCSS component library which offers many lightweight components to kick start any react project.
 

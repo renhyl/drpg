@@ -2,16 +2,21 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## App Description
 
-This is simple demo app demonstrating use of NextJS v14, TypeScript and TailwindCSS
+This is simple demo app demonstrating use of NextJS v14, TypeScript, TailwindCSS, Playwright for e2e testing.
 
 ### Tech stack
 
 [https://nextjs.org/docs](NextJS) was chosen as it is is one of the leading ReactJS frameworks which allows for Server Side rendering and Client Side Rendering, it is widly supported and has big community.
+
 [https://tanstack.com/](TanStackQuery) Headless, type-safe, & powerful utilities for State Management, Routing, Data Visualization, Charts, Tables, and more.
+
 [https://tailwindcss.com/docs/installation](TailWindCSS) was chosen as it is one of the best utility first CSS libraries, it allows for rapid development.
+
 [https://ui.shadcn.com/](shadcn/ui) is React/TailWindCSS component library which offers many lightweight components to kick start any react project.
 
 Project uses [https://www.typescriptlang.org/docs/](TypeScript) to ensure type safety, in addition graphql code-gen ensures GraphQL graphs/queries/mutations are type safe when used across the app.
+
+Project uses [https://playwright.dev/](Playwright) for e2e testing.
 
 ## Local Dev Setup
 

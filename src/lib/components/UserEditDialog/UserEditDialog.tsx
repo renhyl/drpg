@@ -29,6 +29,7 @@ const UserEditDialog: React.FC<IUserEditDialog> = ({ user, handleEditDetails, ..
 
     const handleEdit = (user: User) => {
         const userData: User = {
+            id: user.id,
             avatar: avatarRef?.current?.value || user.avatar,
             first_name: firstNameRef?.current?.value || user.first_name,
             last_name: lastNameRef?.current?.value || user.last_name,

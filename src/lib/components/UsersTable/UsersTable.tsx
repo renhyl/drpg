@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useSuspenseQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { usersOptions } from '@/lib/queries/users/usersOptions'
 import Image from 'next/image'
 
@@ -18,7 +18,7 @@ export type User = {
 }
 
 interface IUsersTable {
-    currentPage: string
+    currentPage: number
 }
 
 const UsersTable: React.FC<IUsersTable> = ({ currentPage: page = 1 }) => {
@@ -41,9 +41,57 @@ const UsersTable: React.FC<IUsersTable> = ({ currentPage: page = 1 }) => {
         })
     }
 
+    const queryClient = useQueryClient()
+
+    const updateUserMutation = useMutation({
+        mutationFn: async (user: User) => {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify(user),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            return await response.json()
+        },
+        onMutate: async (user: User) => {
+            await queryClient.cancelQueries({ queryKey: ['users'] })
+
+            const previousUsers: { data: User[] } | undefined = queryClient.getQueryData([
+                'users',
+                page
+            ])
+
+            if (previousUsers) {
+                for (let index = 0; index < previousUsers.data.length; index++) {
+                    const element = previousUsers.data[index]
+                    if (element.id === user.id) {
+                        previousUsers.data.splice(index, 1, user)
+                        break
+                    }
+                }
+
+                queryClient.setQueryData(['users', page], {
+                    ...previousUsers
+                })
+            }
+
+            return { previousUsers }
+        },
+        onError: (err, variables, context) => {
+            if (context?.previousUsers) {
+                queryClient.setQueryData(['users'], context.previousUsers)
+            }
+        },
+        /**
+         * Refetch, because of API not changing the data, re-fetch wipes the editied data
+         */
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['users', page] })
+    })
+
     const handleEditDetails = (user: User) => {
         /** TODO save/submit new user data */
         console.log('save new user data:', user)
+
+        updateUserMutation.mutate(user)
     }
 
     const handleCurrentPage = (page: number) => {
@@ -124,7 +172,7 @@ const UsersTable: React.FC<IUsersTable> = ({ currentPage: page = 1 }) => {
 
                 <Paginator
                     perPage={perPage}
-                    currentPage={parseInt(page)}
+                    currentPage={page}
                     totalCount={totalCount}
                     setCurrentPage={handleCurrentPage}
                 />

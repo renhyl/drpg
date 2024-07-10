@@ -33,7 +33,7 @@ export default async function Home({
             <ErrorBoundary>
                 <Suspense fallback={<UsersTableSkeleton />}>
                     <HydrationBoundary state={dehydrate(queryClient)}>
-                        <UsersTable currentPage={pageNumber} />
+                        <UsersTable currentPage={parseInt(pageNumber)} />
                     </HydrationBoundary>
                 </Suspense>
             </ErrorBoundary>

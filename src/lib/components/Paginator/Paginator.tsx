@@ -81,12 +81,13 @@ const Paginator: React.FC<IPaginator> = ({
             <PaginationContent>
                 <PaginationItem>
                     <PaginationFirst
-                        onClick={() => setCurrentPage && setCurrentPage(1)}
+                        onClick={() => currentPage !== 1 && setCurrentPage && setCurrentPage(1)}
                         className={
                             currentPage === 1
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'cursor-pointer'
                         }
+                        aria-label="Go to first page"
                         aria-disabled={currentPage === 1}
                     />
                 </PaginationItem>
@@ -98,12 +99,14 @@ const Paginator: React.FC<IPaginator> = ({
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'cursor-pointer'
                         }
+                        aria-label="Go to previous page"
                         aria-disabled={currentPage === 1}
                     />
                 </PaginationItem>
                 {paginationPages(currentPage, (page: number) => setCurrentPage(page))}
                 <PaginationItem>
                     <PaginationNext
+                        aria-label="Go to next page"
                         aria-disabled={currentPage === pageCount}
                         onClick={handleNextPage}
                         className={
@@ -115,12 +118,15 @@ const Paginator: React.FC<IPaginator> = ({
                 </PaginationItem>
                 <PaginationItem>
                     <PaginationLast
-                        onClick={() => setCurrentPage && setCurrentPage(pageCount)}
+                        onClick={() =>
+                            currentPage !== pageCount && setCurrentPage && setCurrentPage(pageCount)
+                        }
                         className={
                             currentPage === pageCount
                                 ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 : 'cursor-pointer'
                         }
+                        aria-label="Go to last page"
                         aria-disabled={currentPage === pageCount}
                     />
                 </PaginationItem>

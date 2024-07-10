@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
+import { usersOptions } from '@/lib/queries/users/usersOptions'
 import Image from 'next/image'
 
 import UserEditDialog from '@/lib/components/UserEditDialog/UserEditDialog'
@@ -15,10 +16,7 @@ export type User = {
 }
 
 const UsersTable = () => {
-    const { data, error, isFetching } = useSuspenseQuery({
-        queryKey: ['users'],
-        queryFn: () => fetch(process.env.NEXT_PUBLIC_API_URL || '').then((res) => res.json())
-    })
+    const { data, error, isFetching } = useSuspenseQuery(usersOptions())
 
     if (!isFetching && error) throw error
 
@@ -55,39 +53,39 @@ const UsersTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {usersData?.length &&
-                            usersData.map((user: User, index: number) => {
-                                return (
-                                    <tr key={index}>
-                                        <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                            <Image
-                                                loader={({ src, width }) => `${src}?w=${width}`}
-                                                priority
-                                                key={user.avatar}
-                                                src={user.avatar}
-                                                width={128}
-                                                height={128}
-                                                alt={`user-${user.first_name}-${user.last_name}`}
-                                            />
-                                        </td>
-                                        <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                            {user.first_name}
-                                        </td>
-                                        <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                            {user.last_name}
-                                        </td>
-                                        <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                            {user.email}
-                                        </td>
-                                        <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                            <UserEditDialog
-                                                user={user}
-                                                handleEditDetails={handleEditDetails}
-                                            />
-                                        </td>
-                                    </tr>
-                                )
-                            })}
+                        {usersData.map((user: User, index: number) => {
+                            return (
+                                <tr key={index}>
+                                    <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                                        <Image
+                                            loader={({ src, width }) => `${src}?w=${width}`}
+                                            priority
+                                            key={user.avatar}
+                                            src={user.avatar}
+                                            width={128}
+                                            height={128}
+                                            alt={`user-${user.first_name}-${user.last_name}`}
+                                            className="w-[128px] h-[128px] bg-gray-200"
+                                        />
+                                    </td>
+                                    <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                                        {user.first_name}
+                                    </td>
+                                    <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                                        {user.last_name}
+                                    </td>
+                                    <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                                        {user.email}
+                                    </td>
+                                    <td className="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                                        <UserEditDialog
+                                            user={user}
+                                            handleEditDetails={handleEditDetails}
+                                        />
+                                    </td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
             </div>

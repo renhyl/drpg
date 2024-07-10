@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
-import ReactQueryProvider from '@/lib/ReactQueryProvider'
+import Providers from '@/lib/providers'
 
 import './globals.css'
 
@@ -20,7 +20,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-                <ReactQueryProvider>{children}</ReactQueryProvider>
+                <Providers>{children}</Providers>
             </body>
         </html>
     )
